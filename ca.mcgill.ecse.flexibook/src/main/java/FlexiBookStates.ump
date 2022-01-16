@@ -1,0 +1,72 @@
+class Appointment{
+	AppointmentStatus{ // State-Machine Declaration
+		BeforeDate{
+			updateAppointment [!isTheAppointmentDay(Date appointmentDate, Date currentDate)] /{doUpdateAppointment(String oldUser, Date oldStartDate, Time oldStartTime, 
+		BookableService newServiceName,Date newStartDate, Time newStartTime);} -> BeforeDate;
+			cancelAppointment [!isTheAppointmentDay(Date appointmentDate, Date currentDate)] /{cancelAppointment(Date StartDate, Time startTime, BookableService serviceName);} -> Cancelled;
+			
+			upadteOptionalService/{AddOptionalService(String serviceName);} -> BeforeDate;
+			// Only the owner can move this appointment from BeforeDate to InProgress.
+			startAppointment /{doStartAppointment();} -> InProgress;
+			registerNoShow /{doUpdateNoShowRecord(Customer aCustomer);} -> NotShow;
+		}
+		InProgress{
+			// Only the owner can move this appointment from InProgress to Done.
+			AddOptionalService(String serviceName);
+			endAppointment /{doEndAppointment();} -> Done;
+		}
+		NotShow{
+		
+		}
+		Cancelled{
+
+		}
+		Done{
+
+		}
+	}
+
+	private void doUpdateAppointment(String oldUser, Date oldStartDate, Time oldStartTime,BookableService newServiceName,
+		Date newStartDate, Time newStartTime){
+		if(!isTheAppointmentDay(Date date, Date currntDate)){
+			for(Appointment aAppointment : getFlexiBook().getAppointments()){
+				if (aAppointment.getTimeSlot().getStartDate().equals(startDate)&&aAppointment.getTimeSlot().getStartTime().equals(startTime)){
+					aAppointment.delete();
+					
+					break;
+				}
+			}
+		}
+	}
+	
+	private void doCancelAppointment(Date startDate, Time startTime, BookableService serviceName){
+		if(!isTheAppointmentDay(Date startDate, Date currntDate)){
+			for(Appointment aAppointment : getFlexiBook().getAppointments()){
+				if (aAppointment.getTimeSlot().getStartDate().equals(startDate)&&aAppointment.getTimeSlot().getStartTime().equals(startTime)){
+					aAppointment.delete();
+					break;
+				}
+			}
+		}
+	}
+	
+	private void AddOptionalService(String serviceName){
+		
+	}
+	
+	private int isTheAppointmentDay(Date appointmentDate, Date currentDate){
+		return appointmentDate.equals(currentDate);
+	}
+
+	private void doUpdateNoShowRecord(Customer aCustomer){
+		gugutime=aCustomer.getguguTimes();
+		aCustomer.setguguTimes(gugutime+1);
+	}
+
+	// Operations that can only be carried out by the owner.
+	private void doStartAppointment(){
+		
+	}
+	private void doEndAppointment(){
+	}
+}

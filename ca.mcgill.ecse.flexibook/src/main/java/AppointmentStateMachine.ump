@@ -1,0 +1,94 @@
+class Appointment{
+	AppointmentStatus{
+
+		// This is the state when before the appointment time.
+		BeforeDate{
+
+			// If the change is not made on the appointment date, we will change the appointment timeslot accordingly.
+			updateDateAndTime(Date sysDate, Time sysTime, Date newStartDate, Time newStartTime, Date newEndDate, Time newEndTime)
+			[!isOnDate(sysDate)] /
+			{doUpdateDateAndTime(newStartDate, newStartTime, newEndDate, newEndTime);} -> BeforeDate;
+
+			// Upon cancelled, the appointment is deleted and remvoed from the system.
+			cancelAppointment(Date sysDate)
+			[!isOnDate(sysDate)] /
+			{doCancelAppointment();} -> Final;
+
+			// If the change is not made on the appointment date, we will change the appointment accordingly.
+			updateServiceOrServiceCombo(Date sysDate, TimeSlot newTimeSlot, BookableService newBookableService, List<ComboItem> newChosenItems)
+			[!isOnDate(sysDate)] /
+			{doUpdateAppointment(newTimeSlot, newBookableService, newChosenItems);} -> BeforeDate;
+
+			// If the system time is after the appointment time, we register the customer for a no-show and remove the appointment.
+			registerNoShow(Date sysDate, Time sysTime)
+			[isAfterAppointmentTime(sysDate, sysTime)] /
+			{doRegisterNoShow();
+			this.delete();} -> Final;
+
+			// Start the appointment and change the status.
+			startAppointment -> InProgress;
+		}
+
+		// This is the state when the service is being carried out.
+		InProgress{
+
+			// Add a new optional service.
+			addOptionalServices(ComboItem newOptionalService)
+			[canAddOptionalService(newOptionalService)] /
+			{this.addChosenItem(newOptionalService);} -> InProgress;
+
+			// End the appointment upon requested.
+			endAppointment() /
+			{this.delete();} -> Final;
+		}
+	}
+
+	private boolean canAddOptionalService(ComboItem newOptionalService){
+		boolean isTheSameServiceCombo = newOptionalService.getServiceCombo().equals(this.bookableService);
+		return isTheSameServiceCombo;
+	}
+
+	private boolean isOnDate(Date sysDate){
+		return this.timeSlot.getStartDate().toString().equals(sysDate.toString());
+	}
+
+	 private boolean isAfterAppointmentTime(Date sysDate, Time sysTime){
+    Date appointmentStartDate = this.timeSlot.getStartDate();
+		Time appointmentStartTime = this.timeSlot.getStartTime();
+
+		if(sysDate.before(appointmentStartDate))
+			{return false;}
+
+
+		else {
+			boolean a=sysDate.toString().compareTo(appointmentStartDate.toString())>0;
+			boolean b=sysTime.toString().equals(appointmentStartTime.toString());
+			boolean c=sysTime.toString().compareTo(appointmentStartTime.toString())>0;
+			boolean d=a||b||c;
+			return d;}
+  }
+
+
+	private void doUpdateDateAndTime(Date newStartDate, Time newStartTime, Date newEndDate, Time newEndTime){
+		TimeSlot ts = this.getTimeSlot();
+		ts.setStartDate(newStartDate);
+		ts.setEndDate(newEndDate);
+		ts.setStartTime(newStartTime);
+		ts.setEndTime(newEndTime);
+	}
+
+	private void doCancelAppointment(){
+		this.delete();
+	}
+
+	private void doUpdateAppointment(TimeSlot newTimeSlot, BookableService newBookableService, List<ComboItem> newChosenItems){
+		this.setTimeSlot(newTimeSlot);
+		this.setBookableService(newBookableService);
+		this.chosenItems = new ArrayList<ComboItem>();
+		if(newChosenItems != null) for(ComboItem item : newChosenItems) this.addChosenItem(item);
+	}
+
+	private void doRegisterNoShow(){
+		this.customer.setGugutime(customer.getGugutime() + 1);
+	}
+}

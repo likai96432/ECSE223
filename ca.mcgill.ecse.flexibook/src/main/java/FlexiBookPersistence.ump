@@ -1,0 +1,104 @@
+external interface Serializable {}
+ 
+ 
+ // persistence layer of FlexiBook, written by P7team
+ 
+ 
+ 
+ 
+ 
+class FlexiBook{
+ depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 1L;
+  public void reinitialize() {
+	    Customer.reinitializeUniqueName(this.getCustomers());
+	    BookableService.reinitializeUniqueService(this.getBookableServices());
+	   
+	}
+
+
+}
+class User{
+depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 13L;
+     
+     //reinit, associate the unique name with user
+     
+     public static  void reinitializeUniqueName(List<Customer> customers){
+    usersByUsername = new HashMap<String, User>();
+	    for (Customer c : customers) {
+		  usersByUsername.put(c.getUsername(), c);
+	    }
+  }
+}
+class Owner {
+  depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 2L;
+}
+
+class Customer {
+ depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 3L;
+    
+}
+
+class Business {
+ depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 4L;
+}
+class BusinessHour {
+  depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 5L;
+}
+  
+class TimeSlot {
+  depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 6L;
+}
+
+class BookableService {
+  depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 7L;
+     
+     //reinit the service with their name
+     
+      public static void reinitializeUniqueService(List< BookableService>  services) {
+	     bookableservicesByName = new HashMap<String,  BookableService>();
+	    for (BookableService b : services) {
+		   bookableservicesByName.put(b.getName(),b);
+	    }
+	}
+}
+
+class Service {
+  depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 8L;
+}
+
+class ServiceCombo {
+ depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 9L;
+}
+
+class ComboItem {
+ depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 10L;
+}
+
+class Appointment {
+
+	depend java.io.Serializable;
+    isA Serializable;
+     private static final long serialVersionUID = 11L;
+}

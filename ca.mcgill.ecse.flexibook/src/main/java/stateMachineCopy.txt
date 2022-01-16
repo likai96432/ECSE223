@@ -1,0 +1,23 @@
+class Appointment{
+	AppointmentStatus{
+		
+		BeforeDate{
+			updateDateAndTime(Date sysDate, Time sysTime, Date newStartDate, Time newStartTime, Date newEndDate, Time newEndTime)
+			[!isOnDate(sysDate)] /
+			{doUpdateDateAndTime(newStartDate, newStartTime, newEndDate, newEndTime);} -> BeforeDate; 
+		}
+		
+	}
+	
+	private boolean isOnDate(Date sysDate){
+		return this.timeSlot.getStartDate().equals(sysDate);
+	}
+	
+	private void doUpdateDateAndTime(Date newStartDate, Time newStartTime, Date newEndDate, Time newEndTime){
+		TimeSlot ts = this.timeSlot;
+		ts.setStartDate(newStartDate);
+		ts.setEndDate(newEndDate);
+		ts.setStartTime(newStartTime);
+		ts.setEndTime(newEndTime);
+	}
+}

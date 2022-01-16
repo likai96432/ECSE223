@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../../:\Programming_Files\McGill_TestSpace\ECSE223\project\ecse223-group-project-p7\ca.mcgill.ecse.flexibook\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

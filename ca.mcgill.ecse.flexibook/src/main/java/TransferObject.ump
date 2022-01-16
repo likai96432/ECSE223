@@ -1,0 +1,50 @@
+namespace ca.mcgill.ecse.flexibook.controller;
+
+class TOBusiness {
+  name;
+  phoneNumber;
+  address;
+  email;
+}
+
+class TOService {
+    name;
+    Integer duration;
+    Integer downtimeStart;
+	Integer downtimeDuration;
+}
+
+class TOTimeSlot {
+  Date startDate;
+  Time startTime;
+  Date endDate;
+  Time endTime;
+}
+
+class TOServiceCombo {
+  name;
+}
+
+class TOCustomer{
+username;
+password;
+int gugutime;
+}
+
+class TOAppointment{
+customer;
+bookableServiceName;
+time;
+}
+
+class TOOwner{
+
+username;
+password;
+}
+
+class TOBusinessHour{
+Integer dayOfWeek;
+Time startTime;
+Time endTime;
+}
